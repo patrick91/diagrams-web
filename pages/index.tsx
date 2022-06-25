@@ -17,9 +17,6 @@ const PRE_CODE = `
 import diagrams
 
 from diagrams import Diagram as BaseDiagram, setdiagram
-from diagrams.aws.compute import EC2
-from diagrams.aws.database import RDS
-from diagrams.aws.network import ELB
 
 import js
 
@@ -36,6 +33,10 @@ class Diagram(BaseDiagram):
 `;
 
 const DEFAULT_CODE = `
+from diagrams.aws.compute import EC2
+from diagrams.aws.database import RDS
+from diagrams.aws.network import ELB
+
 with Diagram("Grouped Workers"):
     ELB("lb") >> [EC2("worker1"),
                   EC2("worker2"),
@@ -144,7 +145,7 @@ const Home: NextPage = () => {
           <Editor />
         </div>
 
-        <div className="relative">
+        <div className="relative h-screen">
           <Loading />
 
           <div id="chart"></div>

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+#chart {
+  @apply h-screen;
+}
+
 #chart svg {
   @apply w-full h-full;
 }
