@@ -12,15 +12,15 @@ import Viz from "viz.js";
 import debounce from "lodash.debounce";
 
 
-
 const PRE_CODE = `
 import diagrams
 
-from diagrams import Diagram as BaseDiagram, setdiagram
+if not hasattr(diagrams, "DiOriginalDiagramagram"):
+    diagrams.OriginalDiagram = diagrams.Diagram
 
 import js
 
-class Diagram(BaseDiagram):
+class Diagram(diagrams.OriginalDiagram):
     def render(self):
         js.renderDot(
           str(self.dot).replace("/lib/python3.10/site-packages/resources/", "https://github.com/mingrammer/diagrams/raw/master/resources/")
@@ -29,7 +29,9 @@ class Diagram(BaseDiagram):
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.render()
-        setdiagram(None)
+        diagrams.setdiagram(None)
+
+diagrams.Diagram = Diagram
 `;
 
 const DEFAULT_CODE = `
