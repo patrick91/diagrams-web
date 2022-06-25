@@ -1,34 +1,14 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
-import React, { useMemo } from "react";
-
-// @ts-ignore
-import debounce from "lodash.debounce";
-import { renderDiagram } from "../lib/render";
+import React from "react";
 
 export const Editor = ({
-  onBeforeRender,
-  onAfterRender,
+  onChange,
   defaultCode,
 }: {
   defaultCode: string;
-  onBeforeRender?: () => void;
-  onAfterRender?: () => void;
+  onChange?: (code: string) => void;
 }) => {
-  const onChange = useMemo(() => {
-    return debounce(async (value: string) => {
-      if (onBeforeRender) {
-        onBeforeRender();
-      }
-
-      await renderDiagram(value);
-
-      if (onAfterRender) {
-        onAfterRender();
-      }
-    }, 300);
-  }, [onAfterRender, onBeforeRender]);
-
   return (
     <CodeMirror
       value={defaultCode}
