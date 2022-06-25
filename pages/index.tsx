@@ -9,8 +9,9 @@ import { resources } from "../lib/resources";
 // @ts-ignore
 import Viz from "viz.js";
 // @ts-ignore
-import { Module, render } from "viz.js/full.render";
 import debounce from "lodash.debounce";
+
+
 
 const PRE_CODE = `
 import diagrams
@@ -35,7 +36,7 @@ class Diagram(BaseDiagram):
 `;
 
 const DEFAULT_CODE = `
-with Diagram("Grouped Workers", show=False, direction="TB"):
+with Diagram("Grouped Workers"):
     ELB("lb") >> [EC2("worker1"),
                   EC2("worker2"),
                   EC2("worker3"),
@@ -94,7 +95,7 @@ const Home: NextPage = () => {
       <Script
         src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js"
         onLoad={async () => {
-          let viz = new Viz({ Module, render });
+          let viz = new Viz({ workerURL: "/js/lite.render.js" });
 
           const renderDot = (dot: string) => {
             viz
@@ -110,7 +111,7 @@ const Home: NextPage = () => {
               })
               .catch((error: any) => {
                 // Create a new Viz instance (@see Caveats page for more info)
-                viz = new Viz({ Module, render });
+                viz = new Viz({ workerURL: "/js/lite.render.js" });
 
                 // Possibly display the error
                 console.error(error);
