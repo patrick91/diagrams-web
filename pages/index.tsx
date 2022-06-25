@@ -2,28 +2,20 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Script from "next/script";
 import React from "react";
+import dynamic from "next/dynamic";
 
 import { Header } from "../components/header";
-import { Editor } from "../components/editor";
-import { PyodideViz } from "../components/pyodide-viz";
-import { Loading } from "../components/loading";
 
-const DEFAULT_CODE = `
-from diagrams.aws.compute import EC2
-from diagrams.aws.database import RDS
-from diagrams.aws.network import ELB
-
-with Diagram("Grouped Workers"):
-    ELB("lb") >> [EC2("worker1"),
-                  EC2("worker2"),
-                  EC2("worker3"),
-                  EC2("worker4"),
-                  EC2("worker5")] >> RDS("events")
-`.trim();
+const EditorWithPreview = dynamic(
+  // @ts-ignore
+  () =>
+    import("../components/editor-with-preview").then(
+      (mod) => mod.EditorWithPreview
+    ),
+  { ssr: false }
+);
 
 const Home: NextPage = () => {
-  const [loading, setLoading] = React.useState(true);
-
   return (
     <div>
       <Script
@@ -32,8 +24,6 @@ const Home: NextPage = () => {
         src="https://plausible.io/js/plausible.js"
       ></Script>
 
-      <PyodideViz code={DEFAULT_CODE} onLoad={() => setLoading(false)} />
-
       <Head>
         <title>Diagrams</title>
         <link rel="icon" href="/favicon.ico" />
@@ -41,21 +31,7 @@ const Home: NextPage = () => {
 
       <Header />
 
-      <div className="grid grid-cols-2">
-        <div className="overflow-y-scroll border-r">
-          <Editor
-            defaultCode={DEFAULT_CODE}
-            onBeforeRender={() => setLoading(true)}
-            onAfterRender={() => setLoading(false)}
-          />
-        </div>
-
-        <div className="relative">
-          {loading && <Loading />}
-
-          <div id="chart"></div>
-        </div>
-      </div>
+      <EditorWithPreview />
     </div>
   );
 };

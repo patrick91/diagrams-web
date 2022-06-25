@@ -6,11 +6,13 @@ if not hasattr(diagrams, "DiOriginalDiagramagram"):
 
 import js
 
+_diagram = None
+
 class Diagram(diagrams.OriginalDiagram):
     def render(self):
-        js.renderDot(
-          str(self.dot).replace("/lib/python3.10/site-packages/resources/", "https://github.com/mingrammer/diagrams/raw/master/resources/")
-        )
+      _diagram = str(self.dot).replace("/lib/python3.10/site-packages/resources/", "https://github.com/mingrammer/diagrams/raw/master/resources/")
+        // js.renderDot(
+        // )
 
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -20,7 +22,9 @@ class Diagram(diagrams.OriginalDiagram):
 diagrams.Diagram = Diagram
 `;
 
-export const renderDiagram = async (pythonCode: string) => {
+const POST_CODE = `_diagram`
+
+export const renderDiagram = async (pyodide: any, pythonCode: string) => {
   // @ts-ignore
-  await window.pyodide.runPythonAsync(PRE_CODE + pythonCode);
+  return await pyodide.runPythonAsync(PRE_CODE + pythonCode);
 };
