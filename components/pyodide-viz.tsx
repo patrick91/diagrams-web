@@ -40,7 +40,6 @@ export const useRender = ({
   onLoadStart: () => void;
   onLoad: () => Promise<void>;
 }) => {
-
   // there's probably a better way for doing this, but I'll investigate later
   // @ts-ignore
   if (typeof window !== "undefined" && !window.pyodide) {
@@ -115,6 +114,7 @@ export const useRender = ({
         }
       } catch (e) {
         console.log(
+          // @ts-ignore
           `Error in pyodideWorker at ${e.filename}, Line: ${e.lineno}, ${e.message}`
         );
       }
