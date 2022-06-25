@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 #chart {
-  @apply h-screen;
+  height: calc(100vh - 58px);
 }
 
 #chart svg {
-  @apply w-full h-full;
+  height: calc(100vh - 58px);
+  width: 100%;
 }
