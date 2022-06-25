@@ -11,7 +11,6 @@ import Viz from "viz.js";
 // @ts-ignore
 import debounce from "lodash.debounce";
 
-
 const PRE_CODE = `
 import diagrams
 
@@ -75,12 +74,26 @@ const renderDiagram = async (pythonCode: string) => {
   await window.pyodide.runPythonAsync(PRE_CODE + pythonCode);
 };
 
-function Editor() {
-  const render = (value: string) => {
-    renderDiagram(value);
-  };
+function Editor({
+  onBeforeRender,
+  onAfterRender,
+}: {
+  onBeforeRender?: () => void;
+  onAfterRender?: () => void;
+}) {
+  const onChange = useMemo(() => {
+    return debounce(async (value: string) => {
+      if (onBeforeRender) {
+        onBeforeRender();
+      }
 
-  const onChange = useMemo(() => debounce(render, 300), []);
+      await renderDiagram(value);
+
+      if (onAfterRender) {
+        onAfterRender();
+      }
+    }, 300);
+  }, [onAfterRender, onBeforeRender]);
 
   return (
     <CodeMirror
@@ -93,6 +106,8 @@ function Editor() {
 }
 
 const Home: NextPage = () => {
+  const [loading, setLoading] = React.useState(true);
+
   return (
     <div>
       <Script
@@ -136,6 +151,8 @@ const Home: NextPage = () => {
           `);
 
           await renderDiagram(DEFAULT_CODE);
+
+          setLoading(false);
         }}
       />
       <Head>
@@ -144,11 +161,14 @@ const Home: NextPage = () => {
       </Head>
       <div className="grid grid-cols-2">
         <div className="overflow-y-scroll h-screen border-r">
-          <Editor />
+          <Editor
+            onBeforeRender={() => setLoading(true)}
+            onAfterRender={() => setLoading(false)}
+          />
         </div>
 
         <div className="relative h-screen">
-          <Loading />
+          {loading && <Loading />}
 
           <div id="chart"></div>
         </div>
