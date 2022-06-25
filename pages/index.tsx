@@ -136,6 +136,12 @@ const Home: NextPage = () => {
   return (
     <div>
       <Script
+        defer
+        data-domain="diagrams-web.vercel.app"
+        src="https://plausible.io/js/plausible.js"
+      ></Script>
+
+      <Script
         src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js"
         onLoad={async () => {
           let viz = new Viz({ workerURL: "/js/lite.render.js" });
